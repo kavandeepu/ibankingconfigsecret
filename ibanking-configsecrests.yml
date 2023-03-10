@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ibankingconfigsecret
+type: kubernetes.io/basic-auth
+StringData:
+  username: root
+  password: welcome1

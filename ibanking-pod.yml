@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myapibankingpod
+spec:
+  containers:
+  - name: ibankingsafe
+    image: kavandeepu/ibankingconfigsecret:1.0
+    ports:
+      - name: tomcatport
+        containerPort: 8082
+        protocol: TCP
+    readinessProbe:
+      httpGet:
+        path: /actuator/health/readiness
+        port: 8082
+      initialDelaySeconds: 10
+      timeoutSeconds: 10
+      failureThreshold: 3
+    livenessProbe:
+      httpGet:
+        path: /actuator/health/liveness
+        port: 8082
+      initialDelaySeconds: 10
+      timeoutSeconds: 10
+      failureThreshold: 3
+    resources:
+      limits:
+        memory: "1024Mi"
+        cpu: "1"
+    env:
+      - name: db.username
+        valueFrom:
+          SecretKeyRef:
+            name: ibankingconfigsecret
+            key: username
+      - name: db.password
+        valueFrom:
+          SecretKeyRef:
+            name: ibankingconfigsecret
+            key: password
+    
